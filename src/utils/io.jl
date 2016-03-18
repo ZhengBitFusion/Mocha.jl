@@ -100,7 +100,7 @@ function load_network(file::JLD.JldFile, net)
 
       for j = 1:length(params)
         @assert is_similar_shape(params[j], net.states[i].parameters[j].blob)
-        copy!(net.states[i].parameters[j].blob, params[j])
+        copy_all!(net.states[i].parameters[j].blob, params[j])
         net.states[i].parameters[j].initializer = NullInitializer()
       end
     end
