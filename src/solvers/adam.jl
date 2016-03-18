@@ -38,7 +38,7 @@ function blobs_clone(blobs::Vector{Vector{Blob}})
     for (i, vecblobs) in enumerate(blobs)
         out[i] = [Array(eltype(b), size(b)) for b in vecblobs]
         for (dst, b) in zip(out[i], vecblobs)
-            copy!(dst, b)
+            copy_all!(dst, b)
         end
     end
     return out
@@ -57,11 +57,11 @@ function solver_state(net::Net, snapshot::AdamSolverStateSnapshot)
     for i in 1:length(i_state.param_states)
         for (dst, src) in zip(i_state.grad_1st_moment_est[i],
                               snapshot.grad_1st_moment_est[i])
-            copy!(dst, src)
+            copy_all!(dst, src)
         end
         for (dst, src) in zip(i_state.grad_2nd_moment_est[i],
                               snapshot.grad_2nd_moment_est[i])
-            copy!(dst, src)
+            copy_all!(dst, src)
         end
     end
     i_state.t = snapshot.t

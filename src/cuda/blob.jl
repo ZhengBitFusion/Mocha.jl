@@ -52,6 +52,12 @@ function copy!{T}(dst :: CuTensorBlob{T}, src :: CuTensorBlob{T})
   @assert length(dst) == length(src)
   CudaRT.copy!(get_ptr(dst), get_ptr(src), sizeof(dst))
 end
+function copy_all!{T}(dst :: CuTensorBlob{T}, src :: CuTensorBlob{T})
+  @assert length(dst) == length(src)
+  @forall(dst, 
+    copy!(dst, src)
+  )
+end
 function copy_async!{T}(backend::GPUBackend, dst :: CuTensorBlob{T}, src :: Array{T})
   @assert length(dst) == length(src)
   CudaRT.copy_async!(get_ptr(dst), convert(Ptr{Void}, pointer(src)), sizeof(dst), get_stream(backend))
