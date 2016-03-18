@@ -144,7 +144,7 @@ function load_network(file::HDF5File, net, die_if_not_found=true)
             @warn("Automatic converting saved $param_name from $(eltype(param)) to $(eltype(param_obj.blob))")
             param = convert(Array{eltype(param_obj.blob)}, param)
           end
-          copy!(param_obj.blob, param)
+          copy_all!(param_obj.blob, param)
         end
         param_obj.initializer = NullInitializer()
       end
