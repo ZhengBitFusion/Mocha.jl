@@ -8,7 +8,8 @@ using HDF5
   force_overwrite :: Bool = false,
 )
 @characterize_layer(HDF5OutputLayer,
-  is_sink => true
+  is_sink => true,
+  has_sync => true,
 )
 
 type HDF5OutputLayerState <: LayerState
@@ -17,6 +18,7 @@ type HDF5OutputLayerState <: LayerState
   buffer :: Vector{Array}
   dsets  :: Vector{Any}
   index  :: Int
+  etc    :: Any
 end
 
 function setup(backend::Backend, layer::HDF5OutputLayer, inputs::Vector{Blob}, diffs::Vector{Blob})
@@ -44,7 +46,9 @@ function setup(backend::Backend, layer::HDF5OutputLayer, inputs::Vector{Blob}, d
     buffer[i] = Array(data_type, dims)
   end
 
-  return HDF5OutputLayerState(layer, file, buffer, dsets, 1)
+  etc = setup_etc(backend, layer, inputs)
+
+  return HDF5OutputLayerState(layer, file, buffer, dsets, 1, etc)
 end
 
 function forward(backend::Backend, state::HDF5OutputLayerState, inputs::Vector{Blob})
