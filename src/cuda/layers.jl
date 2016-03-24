@@ -32,6 +32,7 @@ include("layers/random-normal.jl")
 # Utility layers
 #############################################################
 include("layers/hdf5-output.jl")
+include("layers/memory-output.jl")
 
 #############################################################
 # Loss Layers

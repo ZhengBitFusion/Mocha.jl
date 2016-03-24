@@ -5,12 +5,14 @@ export reset_outputs
   (bottoms :: Vector{Symbol} = [], length(bottoms) > 0)
 )
 @characterize_layer(MemoryOutputLayer,
-  is_sink => true
+  is_sink  => true,
+  has_sync => true,
 )
 
 type MemoryOutputLayerState <: LayerState
   layer   :: MemoryOutputLayer
   outputs :: Vector{Vector{Array}}
+  etc     :: Any
 end
 
 function reset_outputs(state::MemoryOutputLayerState)
@@ -25,7 +27,8 @@ function setup(backend::Backend, layer::MemoryOutputLayer, inputs::Vector{Blob},
     outputs[i] = Array[]
   end
 
-  return MemoryOutputLayerState(layer, outputs)
+  etc = setup_etc(backend, layer, inputs)
+  return MemoryOutputLayerState(layer, outputs, etc)
 end
 
 function forward(backend::Backend, state::MemoryOutputLayerState, inputs::Vector{Blob})
